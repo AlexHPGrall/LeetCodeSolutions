@@ -2,28 +2,32 @@ class Solution {
 public:
     int maxDistToClosest(vector<int>& seats) {
         int n =seats.size();
-        int start=0;
-        int currdist=0;
-        int res=0;
-        while(start<n && seats[start]!=1)
+        int currmax=0;
+        int l=0,r=n-1;
+        while(seats[l]==0)
         {
-            start++;
+            ++l;
         }
-            
-        res=max(0,start);
-        for(int i =start; i< n;++i)
+        currmax=l;
+        while(seats[r]==0)
         {
-             if(seats[i])
-             {
-                 res=max(res, (currdist+1)/2);
-                 currdist =0;
-             }
-                 
-            else
-                currdist++;
+            --r;
         }
-        res=max(res, currdist);
+        currmax=max(currmax, (n-1-r));
         
-        return res;
+        for(int i=l;i<r;++i)
+        {
+            if(seats[i])
+                continue;
+            int j=i;
+            while(i<r && seats[i]==0)
+            {
+                ++i;
+            }
+            currmax=max(currmax,(int) ceil((float)(i-j)/2.0f));
+        }
+        
+        return currmax;
+        
     }
 };

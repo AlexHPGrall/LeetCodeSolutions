@@ -1,28 +1,26 @@
 class Solution {
 public:
     int numRollsToTarget(int n, int k, int target) {
-        int mod=1e9+7;
-        vector<vector<int>> dp(n+1,vector<int>(target+1, 0));
-        
-        for(int j = 1;j<=target;++j)
+        vector<vector<unsigned long long>> dp(n+1, vector<unsigned long long>(target+1,0));
+        int mod= (1e9)+7;
+        for(int i=1; i<=min(k,target); ++i)
         {
-            for(int i= 1; i<=n;++i)
+            dp[1][i]=1;
+        }
+        
+        for(int i=2;i<=n;++i)
+        {
+            for(int t=1;t<=target;++t)
             {
-                if(i*k<j)
-                    continue;
-                if(i==1)
+                for(int j=1;j<=k;++j)
                 {
-                    dp[i][j]=1;
-                    continue;
+                    if(t-j>0)
+                        dp[i][t] +=(dp[i-1][t-j]);     
                 }
-                    
-                for(int a=1; a<=k; ++a)
-                {
-                    if(j>a)
-                        dp[i][j]= dp[i][j]%mod + dp[i-1][j-a]%mod;
-                }
+                dp[i][t]=dp[i][t]%mod;
             }
         }
-       return dp[n][target]%mod;
+        
+        return (int)(dp[n][target]%mod);
     }
 };

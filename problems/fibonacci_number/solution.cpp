@@ -1,17 +1,18 @@
 class Solution {
-    int fibArray[30] = {0,1};
 public:
     int fib(int n) {
-      
-        if(n==0 || n ==1)
-            return n;
-        
-        if(fibArray[n-1] == 0)
-            fibArray[n-1] = fib(n-1);
-        if(fibArray[n-2] == 0)
-            fibArray[n-2] = fib(n-2);
-        
-        return fibArray[n-1] + fibArray[n-2];
-        
+        int a=0,b=1;
+        int c;
+        if(n==0)
+            return a;
+        if(n==1)
+            return b;
+        for(int i=2; i<=n;++i)
+        {
+            c=a+b;
+            a=b;
+            b=c;
+        }
+        return c;
     }
 };

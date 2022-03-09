@@ -1,45 +1,35 @@
 class Solution {
 public:
     bool wordPattern(string pattern, string s) {
-        unordered_map<char,string> mp;
-        unordered_map<string,char> rmap;
+        unordered_map<string,char> mp1;
+        unordered_map<char, string> mp2;
         int i=0;
-        int n=s.size();
-        for(char c:pattern)
+        int j=0;
+        for(;i<pattern.size()&& j<s.size();++i)
         {
-            if(i>=n)
+            string word;
+            char pat=pattern[i];
+            //cout<<i<<" "<<j<<endl;
+            while(j<s.size()&&s[j]!=' ')
+            {
+                word.push_back(s[j]);
+                ++j;
+            }
+            if(j<s.size())
+                ++j;
+            if(mp2.count(pat) && mp2[pat]!=word)
                 return false;
-            if(mp.count(c))
+            if(mp1.count(word) && mp1[word]!=pat)
+                return false;
+            if(!mp1.count(word))
             {
-                int start=i;
-                while(i<n && s[i] != ' ')
-                {
-                    if(s[i]!=mp[c][i-start])
-                    {
-                        return false;
-                    }
-                    ++i;
-                }
+                mp1[word]=pat;
+                mp2[pat]=word;
             }
-            else
-            {
-                while(i<n && s[i] != ' ')
-                {
-                    mp[c].push_back(s[i]);
-                    ++i;
-                }
-                if(rmap.count(mp[c]))
-                    return false;
-                rmap[mp[c]] = c;
-                    
-            }
-            ++i;
-            
         }
         
-        if(i<n)
+        if(j!=s.size()||i!=pattern.size())
             return false;
-        
         return true;
     }
 };

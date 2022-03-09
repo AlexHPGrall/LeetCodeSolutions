@@ -1,35 +1,43 @@
 class Solution {
 public:
-    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
-        int rows = matrix.size();
-        if (rows == 0) 
-            return matrix;
-        int cols = matrix[0].size();
-        vector<vector<int>> dist(rows, vector<int> (cols, INT_MAX - 100000));
-
-        //First pass: check for left and top
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (matrix[i][j] == 0) {
-                    dist[i][j] = 0;
-                } else {
-                    if (i > 0)
-                        dist[i][j] = min(dist[i][j], dist[i - 1][j] + 1);
-                    if (j > 0)
-                        dist[i][j] = min(dist[i][j], dist[i][j - 1] + 1);
-                }
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int m=mat.size();
+        int n=mat[0].size();
+        if(mat[0][0])
+            mat[0][0]=INT_MAX-1;
+        for(int i=0;i<m;++i)
+        {
+            for(int j=0; j<n;++j)
+            {
+                
+                if(!mat[i][j]||(i==0&&j==0))
+                    continue;
+                if(!i)
+                    mat[i][j]=mat[i][j-1]+1;
+                else if(!j)
+                    mat[i][j]=mat[i-1][j]+1;
+                else
+                    mat[i][j]=min(mat[i-1][j],mat[i][j-1]) +1;
+                if(mat[i][j]==INT_MAX)
+                    mat[i][j]-=1;
             }
         }
-
-        //Second pass: check for bottom and right
-        for (int i = rows - 1; i >= 0; i--) {
-            for (int j = cols - 1; j >= 0; j--) {
-                if (i < rows - 1)
-                    dist[i][j] = min(dist[i][j], dist[i + 1][j] + 1);
-                if (j < cols - 1)
-                    dist[i][j] = min(dist[i][j], dist[i][j + 1] + 1);
+        
+        for(int i=m-1;i>=0;--i)
+        {
+            for(int j=n-1; j>=0;--j)
+            {
+                
+                if(!mat[i][j]||(i==m-1&&j==n-1))
+                    continue;
+                if(i==m-1)
+                    mat[i][j]=min(mat[i][j],mat[i][j+1]+1);
+                else if(j==n-1)
+                    mat[i][j]=min(mat[i+1][j]+1,mat[i][j]);
+                else
+                    mat[i][j]=min({mat[i][j], mat[i+1][j]+1,mat[i][j+1]+1});
             }
         }
-        return dist;
+        return mat;
     }
 };

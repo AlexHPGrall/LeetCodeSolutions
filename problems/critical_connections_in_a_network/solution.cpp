@@ -1,38 +1,39 @@
 class Solution {
-    vector<vector<int>> Br;
-    int Time;
 public:
-    void Tarjan(int u, int p,vector<int>& low, vector<int>& dist, vector<vector<int>>& adj)
+    int time=0;
+    vector<vector<int>> res;
+    void Tarjan(vector<int> &dist, vector<int> &low, int node, int parent, vector<vector<int>> &graph)
     {
-        low[u]= dist[u] =++Time;
-        for(auto& v:adj[u])
+        ++time;
+        dist[node]=time;
+        low[node]=time;
+        for(int nei:graph[node])
         {
-            if(v==p)
+            if(nei==parent)
                 continue;
-            if(!dist[v])
+            if(!dist[nei])
             {
-                Tarjan(v, u,low, dist, adj);
-                if(dist[u]<low[v])
-                    Br.push_back({u, v});
-                low[u] = min(low[u], low[v]);
+                Tarjan(dist, low, nei, node ,graph);
+                if(dist[node]<low[nei])
+                    res.push_back({node,nei});
+                low[node]=min(low[node],low[nei]);
             }
-            else{
-                low[u]= min(low[u], dist[v]);
+            else
+            {
+                low[node]=min(low[node],dist[nei]);
             }
         }
     }
     vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
-        vector<vector<int>> adj(n);
-        vector<int> low(n);
+        vector<vector<int>> graph(n);
         vector<int> dist(n,0);
-        Time=0;
-        for(auto edge:connections)
+        vector<int> low(n,0);
+        for(auto &e:connections)
         {
-           adj[edge[0]].push_back(edge[1]);
-           adj[edge[1]].push_back(edge[0]);
+            graph[e[0]].push_back(e[1]);
+            graph[e[1]].push_back(e[0]);
         }
-        Tarjan(0,0, low, dist, adj);
-        
-        return Br;
+        Tarjan(dist,low,0,0,graph);
+        return res;
     }
 };

@@ -1,80 +1,48 @@
 class Solution {
 public:
-    struct qdata
+    vector<vector<int>> moves = {{-1,0},{1,0},{0,-1},{0,1}};
+    int orangesRotting(vector<vector<int>>& grid) {
+     queue<pair<int,int>> q;
+        int m =grid.size();
+        int n=grid[0].size();
+    for(int i=0;i<m;++i)
     {
-        int i;
-        int j;
-        int depth;
-    };
-    
-    vector<vector<int>> moves={{1,0},{0,1},{-1,0},{0,-1}};
-    int time=0;
-     int m,n;
-    /*
-    void BFS(vector<vector<int>> &grid, int i, int j, int depth)
-    {
-        time = max(time, depth);
-        grid[i][j]=2;
-        for(vector<int> mo:moves)
+        for(int j=0;j<n;++j)
         {
-            int ni =i+mo[0], nj =j+mo[1];
-            if(ni>=0 && ni<m && nj>=0 && nj<n && grid[ni][nj] == 1)
-            {
-                DFS(grid,ni,nj,depth+1);
-            }
+            if(grid[i][j]==2)
+                q.push({i,j});
         }
     }
-    */
-    int orangesRotting(vector<vector<int>>& grid) {
-        queue<qdata> q;
-        int oranges;
-        m=grid.size();
-        n= grid[0].size();
-        for(int i=0; i<m; ++i)
-        {
-            for(int j=0; j<n; ++j)
-            {
-                if(grid[i][j] == 1)
-                    ++oranges;
-                else if(grid[i][j] == 2)
-                {
-                    q.push({i,j,0});
-                    grid[i][j] =3;
-                }
-                    
-            }
-        }
+        int time=0;
         while(!q.empty())
         {
-            qdata d = q.front();
-            q.pop();
-            
-            if(grid[d.i][d.j] == 2 )
-                continue;
-            grid[d.i][d.j] =2;
-            time = max(time, d.depth);
-            for(vector<int> mo:moves)
-        {
-            int ni =d.i+mo[0], nj =d.j+mo[1];
-            if(ni>=0 && ni<m && nj>=0 && nj<n && grid[ni][nj] == 1)
+            int cnt=q.size();
+            while(cnt--)
             {
-                q.push({ni,nj,d.depth+1});
+                int i=q.front().first;
+                int j=q.front().second;
+                q.pop();
+                for(auto &mv:moves)
+                {
+                    int ni = i+mv[0];
+                    int nj=j+mv[1];
+                    if(ni>=0 && ni<m && nj>=0 && nj<n && grid[ni][nj]==1)
+                    {
+                        grid[ni][nj]=2;
+                        q.push({ni,nj});
+                    }
+                }
             }
+            ++time;
         }
-            
-        }
-        
-        for(int i=0; i<m; ++i)
+            for(int i=0;i<m;++i)
+    {
+        for(int j=0;j<n;++j)
         {
-            for(int j=0; j<n; ++j)
-            {
-                if(grid[i][j] == 1)
-                   return -1;
-            }
+            if(grid[i][j]==1)
+                return -1;
         }
-        
-        return time;
-        
-        
+    }
+        return max(0,time-1);
     }
 };

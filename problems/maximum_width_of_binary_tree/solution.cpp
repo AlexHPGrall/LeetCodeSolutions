@@ -13,46 +13,51 @@ class Solution {
 public:
     int widthOfBinaryTree(TreeNode* root) {
         queue<TreeNode*> q;
-        queue<uint32_t> wq; 
-        int res=0;
+        queue<unsigned long long> indexQ;
         q.push(root);
-        wq.push(1);
-        
+        indexQ.push(1);
+        unsigned long long res=1;
         while(!q.empty())
         {
-            int n=q.size();
-            uint32_t First=0, Last=0;
-            
-            while(n--)
+            long long start=INT_MAX;
+            long long end=INT_MIN;
+            int count=q.size();
+            int sz=count-1;
+            long long startIndex=-1;
+            while(count--)
             {
-                TreeNode* curr = q.front();
-                //cout<<curr->val<<" ";
+                long long i=indexQ.front();
+                if(startIndex==-1)
+                    startIndex=i;
+                
+                i-=startIndex;
+                TreeNode* curr=q.front();
                 q.pop();
-                uint32_t currval=wq.front();
-                wq.pop();
-                if(!curr)
-                {
-                    continue;
-                }
-                if(!First)
-                    First=currval;
-                Last=currval;
+                indexQ.pop();
+                
                 if(curr->left)
                 {
                     q.push(curr->left);
-                    wq.push(2*currval);
+                    indexQ.push(2*i);
+                    start=min(start, (2*i));
+                    end=max(end,(2*i));
                 }
                 if(curr->right)
                 {
                     q.push(curr->right);
-                    wq.push(2*currval+1);
+                    indexQ.push((2*i)+1);
+                    start=min(start, (2*i)+1);
+                    end=max(end,(2*i)+1);
+
+                        
                 }
                 
             }
-            //cout<<endl;
-            if(First)
-                res=max(res,(int)(Last-First+1));
+            //cout<<start<<endl;
+            if(start!=INT_MAX && end!=INT_MIN)
+                res=max(res, (unsigned long long) end-start+1);
         }
-        return res;
+        return (int)res;
+        
     }
 };

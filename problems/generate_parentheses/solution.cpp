@@ -1,29 +1,32 @@
 class Solution {
 public:
-    unordered_set<string> st;
-    void recPar(int k, int o, string& s)
+    
+    void Dfs(int o, int i, int n,string &s, vector<string> &res)
     {
-        if(k==0 && o==0)
-            st.insert(s);
-        if(k>0)
+        if(i==n)
+        {
+            res.push_back(s);
+            return;
+        }
+        if(o< n-i)
         {
             s.push_back('(');
-            recPar(k-1,o+1,s);
+            Dfs(o+1, i+1, n, s, res);
             s.pop_back();
         }
         if(o>0)
         {
             s.push_back(')');
-            recPar(k,o-1,s);
+            Dfs(o-1, i+1, n, s,res);
             s.pop_back();
         }
     }
-    vector<string> generateParenthesis(int n) {
+    
+    vector<string> generateParenthesis(int n)
+    {
         vector<string> res;
-        string tmp;
-        recPar(n,0,tmp);
-        for(string s:st)
-            res.push_back(s);
+        string s;
+        Dfs(0,0,2*n,s,res);
         return res;
     }
 };

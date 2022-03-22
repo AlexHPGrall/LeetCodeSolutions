@@ -1,51 +1,24 @@
 class Solution {
 public:
     vector<string> reorderLogFiles(vector<string>& logs) {
-        unordered_map<string, int>mp;
-        for(int i=0; i<logs.size();++i)
-        {
-            mp[logs[i]]=i;
-        }
-        sort(logs.begin(), logs.end(), [&mp](string s1,string s2){
-            
-            int i=0, j=0;
-            while(s1[i++]!=' ')
-            {}
-            while(s2[j++]!=' ')
-            {}
-            if(s1[i]>='a' && s1[i]<='z')
-            {
-                if(s2[j]>='a' && s2[j]<='z')
-                {
-                    while(i<s1.length() && j<s2.length() && s1[i]==s2[j])
-                    {
-                        ++i;
-                        ++j;
-                    }
-                    if(i==s1.length() && j==s2.length())
-                    {
-                        i=0;j=0;
-                        while(i<s1.length() && j<s2.length() && s1[i]==s2[j])
-                    {
-                        ++i;
-                        ++j;
-                    }
-                    }
-                    if(i==s1.length())
-                        return true;
-                    if(j==s2.length())
-                        return false;
-                    return s1[i]<s2[j];
-                }
-                return true;
-            }
-            if(s2[j]>='a' && s2[j]<='z')
-            {
+        auto cmp=[](string s1, string s2){
+            int i1=0;
+            int i2=0;
+            while(s1[i1]!=' ')
+                ++i1;
+            while(s2[i2]!=' ')
+                ++i2;
+            if(s1[i1+1]>='0'&& s1[i1+1]<='9' && s2[i2+1]>='a')
                 return false;
-            }
-            return mp[s1]<mp[s2];
-            
-        });
+            if(s2[i2+1]>='0'&& s2[i2+1]<='9' && s1[i1+1]>='a')
+                return true;
+            if(s1[i1+1]>='0'&& s1[i1+1]<='9' &&s2[i2+1]>='0'&& s2[i2+1]<='9')
+                return false;
+            if(s1.substr(i1)==s2.substr(i2))
+                return s1.substr(0,i1)<s2.substr(0,i2);
+            return s1.substr(i1)<s2.substr(i2);
+        };
+        stable_sort(logs.begin(),logs.end(), cmp);
         return logs;
     }
 };

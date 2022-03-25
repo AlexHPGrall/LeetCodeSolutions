@@ -1,48 +1,45 @@
 class Solution {
 public:
-    vector<vector<int>> moves = {{-1,0},{1,0},{0,-1},{0,1}};
+    vector<vector<int>> moves={{1,0},{0,1},{-1,0},{0,-1}};
     int orangesRotting(vector<vector<int>>& grid) {
-     queue<pair<int,int>> q;
-        int m =grid.size();
+        queue<pair<int, int>> q;
+        int m=grid.size();
         int n=grid[0].size();
-    for(int i=0;i<m;++i)
-    {
-        for(int j=0;j<n;++j)
-        {
-            if(grid[i][j]==2)
-                q.push({i,j});
-        }
-    }
+        for(int i=0; i<grid.size(); ++i)
+            for(int j=0; j<grid[0].size();++j)
+                if(grid[i][j]==2)
+                    q.push({i,j});
         int time=0;
+        
         while(!q.empty())
         {
-            int cnt=q.size();
-            while(cnt--)
+            int count=q.size();
+            while(count--)
             {
-                int i=q.front().first;
-                int j=q.front().second;
+                pair<int, int> p=q.front();
                 q.pop();
+                int r=p.first;
+                int c=p.second;
+                //cout<<r<<' '<<c<<endl;
                 for(auto &mv:moves)
                 {
-                    int ni = i+mv[0];
-                    int nj=j+mv[1];
-                    if(ni>=0 && ni<m && nj>=0 && nj<n && grid[ni][nj]==1)
+                    int nr=r+mv[0];
+                    int nc=c+mv[1];
+                    if(nr>=0 && nr<m && nc>=0 && nc<n && grid[nr][nc]==1)
                     {
-                        grid[ni][nj]=2;
-                        q.push({ni,nj});
+                        grid[nr][nc]=2;
+                        q.push({nr,nc});
                     }
                 }
+                
+                
             }
             ++time;
         }
-            for(int i=0;i<m;++i)
-    {
-        for(int j=0;j<n;++j)
-        {
-            if(grid[i][j]==1)
-                return -1;
-        }
-    }
+        for(int i=0; i<grid.size(); ++i)
+            for(int j=0; j<grid[0].size();++j)
+                if(grid[i][j]==1)
+                    return -1;
         return max(0,time-1);
     }
 };

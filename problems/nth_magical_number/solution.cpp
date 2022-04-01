@@ -1,46 +1,29 @@
-#define ull unsigned long long
 class Solution {
 public:
-    int mod = 1e9 +7;
-    int nthMagicalNumber(unsigned long long n, unsigned long long a, unsigned long long b) {
-        if(a>=b)
-            swap(a,b);
-        if(n==1)
-            return a;
-        if(b%a == 0)
-            return ((a%mod)*(n%mod))%mod;
-        unsigned long long d = lcm(a,b);
-        unsigned long long c = a*n;
-        unsigned long long m=c/b - c/d;
-        if(m==0)
-            return c;
-        ull l=n-m;
-        ull r=n;
-        while(l<r)
+    int mod =(1e9)+7;
+    int nthMagicalNumber(int n, int a, int b) {
+        unsigned long long al=a, bl=b;
+        unsigned long long k=lcm(al,bl);
+        unsigned long long l=(k/al)+(k/bl)-1;
+        unsigned long long res=k*(n/l);
+        unsigned long long i=1, j=1;
+        
+        //cout<<res<<endl;
+        unsigned long long tres=0;
+        for(unsigned long long m=0;m<n%l;++m)
         {
-            ull mid = l+(r-l)/2;
-            c = a*mid;
-            m=c/b - c/d;
-            if(mid + m == n)
-                return c%mod;
-            if(mid+m<n)
-                l=mid+1;
+            if(al*i< bl*j)
+            {
+                tres=al*i;
+                ++i;
+            }
             else
-                r=mid;
+            {
+                tres=bl*j;
+                ++j;
+            }
+            //cout<<res<<endl;
         }
-        --l;
-        c = a*l;
-        m=c/b - c/d;
-        
-        if(l+m==n)
-            return c%mod;
-        
-        else 
-        {
-           
-            c= ((c/b)+(n-(l+m)))*b;
-            return c%mod;
-        }
-        
+        return ((int)(res%mod)+(int)(tres%mod))%mod;
     }
 };

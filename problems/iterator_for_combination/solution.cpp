@@ -1,61 +1,41 @@
 class CombinationIterator {
-    int curr;
-    int last;
-    int first;
-    int clength;
-    string chars;
-    string perm;
-    stack<int> cmb;
-    int n;
-    
-    int next(int x)
-    {
-    int smallest, ripple, new_smallest, ones;
-
-     if (x == 0) return first;
-     smallest     = (x & -x);
-     ripple       = x + smallest;
-     new_smallest = (ripple & -ripple);
-     ones         = ((new_smallest/smallest) >> 1) - 1;
-     return ripple | ones;
-    }
+    vector<string> words;
+    int index;
 public:
-    CombinationIterator(string characters, int combinationLength) {
-        chars=characters;
-        n=chars.length();
-        first=0;
-        last=0;
-        clength=combinationLength;
-        for(int i=0; i<clength; ++i)
+    
+    void rec(string &chars, int len, int i, string &s)
+    {
+        if(s.size()==len)
         {
-            first |= (1<<i);
-            last |=(1<<(n-1-i));
+            words.push_back(s);
+            return;
         }
-        curr=0;
-        perm.resize(clength);
-        for(;curr!=last;)
+        for(int j=i;s.size() + chars.length()-1 -j+1>=len;++j)
         {
-            curr=next(curr);
-            cmb.push(curr);
+           
+            s.push_back(chars[j]);
+            rec(chars,len,j+1,s);
+            s.pop_back();
         }
+        
+            
+    }
+    
+    CombinationIterator(string chars, int len) {
+        string s="";
+        rec(chars, len,0, s);
+        index=0;
     }
     
     string next() {
-        int mask = cmb.top();
-        cmb.pop();
         
-        int j=0;
-        for(int i=0; i<n;++i)
-        {
-            if(mask & (1<<(n-1-i)))
-                perm[j++] =chars[i];
-        }
-            
-        return perm;
+        index++;
+        return words[index-1];
+        
     }
     
     bool hasNext() {
-        return !(cmb.empty());
+        return !(index==words.size());
     }
 };
 

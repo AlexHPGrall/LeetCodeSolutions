@@ -1,18 +1,20 @@
 class Solution {
 public:
     int minimumTime(string s) {
-     int sum=0;
-        int dp=0;
+        int best=0, curr=0;
         for(char c:s)
         {
-            if(c=='1')
-                sum+=1;
-            else
-                sum-=1;
             
-            dp=min({0,sum,dp});
-            sum=min(0,sum);
+            if(c=='1')
+                curr++;
+            else
+                curr--;
+            
+            if(curr>=0)
+                curr=0;
+            best=min(best, curr);
+                
         }
-        return s.length()+dp;
+        return s.size()+best;
     }
 };

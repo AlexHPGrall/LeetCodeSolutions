@@ -1,32 +1,21 @@
 class KthLargest {
-    vector<int> heap;
+    priority_queue<int, vector<int>, greater<int>> pq;
     int k;
 public:
     KthLargest(int k, vector<int>& nums) {
-        heap=nums;
         this->k=k;
+        for(int n:nums)
+            pq.push(n);
         
-        make_heap(heap.begin(), heap.end(), std::greater<>{});
-        while(heap.size()>k)
-        {
-            pop_heap(heap.begin(), heap.end(), std::greater<>{});
-            heap.pop_back();
-        }
-      
+        while(pq.size()>k)
+            pq.pop();
     }
     
     int add(int val) {
-
-            heap.push_back(val);
-            push_heap(heap.begin(), heap.end(), std::greater<>{});
-        
-        if(heap.size()>k)
-        {
-            pop_heap(heap.begin(), heap.end(), std::greater<>{});
-            heap.pop_back();
-            
-        }
-        return heap[0];
+        pq.push(val);
+        if(pq.size()>k)
+            pq.pop();
+        return pq.top();
     }
 };
 /**

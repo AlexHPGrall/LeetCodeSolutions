@@ -1,45 +1,30 @@
 class Solution {
 public:
     int maximumUniqueSubarray(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> range(n);
-        unordered_set<int> RangeSet;
-        int res =0;
-        int r = 1;
-        int l=0;
-        int sum =nums[0];
-        for(int i =0; i <n; ++i)
+        int n=nums.size();
+        
+        unordered_map<int, int> vis;
+        vector<int> sum(n+1, 0);
+        
+        int best=0;
+        int curr=0;
+        int start=0;
+        for(int i=0; i<n;++i)
         {
-            l=i;
-            int j= max(r-1, l);
-            
-           
-            RangeSet.insert(nums[i]);
-            
-            while(++j<n)
+            sum[i+1]=sum[i]+nums[i];
+            if(vis.count(nums[i]) && start<= vis[nums[i]])
             {
-                 
                 
-                if(RangeSet.find(nums[j]) != RangeSet.end())
-                    break;
-                else{
-                    RangeSet.insert(nums[j]);
-                    sum += nums[j];
-                    }
+                curr=curr - (sum[vis[nums[i]]+1]-sum[start]);
+                start=vis[nums[i]]+1;
                 
             }
-            
-            RangeSet.erase(nums[l]);
-            r = j;
-            res = max(sum,res);
-            if(j >= n)
-                break;
-            if(r>l+1)
-            sum-=nums[l];
-            
+            curr+=nums[i];
+            vis[nums[i]]=i;
+            best=max(best, curr);
+            //cout<<curr<<endl;
         }
-        return res;
-    }
-    
+        return best;
         
+    }
 };

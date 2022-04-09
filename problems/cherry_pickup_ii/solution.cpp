@@ -1,37 +1,38 @@
 class Solution {
 public:
+    vector<int> mv={-1,0,1};
     int cherryPickup(vector<vector<int>>& grid) {
         int m=grid.size();
         int n=grid[0].size();
-        vector<vector<vector<int>>> dp(m,vector<vector<int>>(n,vector<int>(n,0)));
-        for(int i=0; i<n;++i)
+        int res=0;
+        vector<vector<vector<int>>> dp(m,vector<vector<int>>(n, vector<int>(n,0)));
+        dp[0][0][n-1]=grid[0][0]+grid[0][n-1];
+        for(int r=1; r<m;++r)
         {
-            for(int j=0; j<n;++j)
-            {
-                if(i==j)
-                    dp[m-1][i][j]=grid[m-1][i];
-                else
-                    dp[m-1][i][j]=grid[m-1][i] + grid[m-1][j];
-            }   
-        }
-        for(int i = m-2; ~i; --i)
-            for(int j = 0; j<n; ++j)
-                for(int k=0;k<n;++k)
+            for(int i=0;i<min(r+1,n-1);++i)
+                for(int j=max(i+1, n-r-1);j<n;++j)
                 {
-                    int temp=-1;
-                    for(int p=-1;p<2;++p)
-                        for(int q=-1;q<2;++q)
+                    int tmp=0;
+                    for(int k=0;k<3;++k)
+                    {
+                        for(int l=0;l<3;++l)
                         {
-                            if(j+p<n && j+p>=0 && k+q<n && k+q >=0)
-                                temp=max(temp, dp[i+1][j+p][k+q]);
+                            int pi=i+mv[k];
+                            int pj=j+mv[l];
+                            if(pi>=0&& pi<min(r,n-1) && pj>=max(pi+1, n-r-2) && pj<n)
+                            {
+                                tmp=max(tmp, dp[r-1][pi][pj]+grid[r][i]+grid[r][j]);
+                            }
                         }
-                    dp[i][j][k]=temp;
-                    if(k==j)
-                        dp[i][j][k]+=grid[i][j];
-                    else
-                        dp[i][j][k]+=grid[i][j] + grid[i][k];
+                    }
+                    dp[r][i][j]=tmp;
+                    res=max(res, dp[r][i][j]);
                     
                 }
-        return dp[0][0][n-1];
+            
+            
+        }
+        
+        return res;
     }
 };

@@ -1,23 +1,20 @@
 class Solution {
 public:
-    bool isV(char c)
-    {
-        return c=='a' ||c=='e' ||c=='i' ||c=='o' ||c=='u' ||c=='A' ||c=='E' ||c=='I' ||c=='O' ||c=='U';
-    }
     string reverseVowels(string s) {
-        int n=s.size();
-        int l=0,r=n-1;
-        while(l<r)
+        int i=0;
+        int j=s.size()-1;
+        while(i<j)
         {
-            while(l<r&&!isV(s[l]))
-                ++l;
-            while(r>l&&!isV(s[r]))
-                --r;
-            if(l<r)
-                swap(s[l],s[r]);
-            ++l;
-            --r;
-                
+            while(i<j && s[i]!='a'&& s[i]!='e'&& s[i]!='i'&& s[i]!='o'&& s[i]!='u'&& s[i]!='A'&& s[i]!='E'&& s[i]!='I'&& s[i]!='O'&& s[i]!='U')
+                ++i;
+            while(i<j && s[j]!='a'&& s[j]!='e'&& s[j]!='i'&& s[j]!='o'&& s[j]!='u'&& s[j]!='A'&& s[j]!='E'&& s[j]!='I'&& s[j]!='O'&& s[j]!='U')
+                --j;
+            if(i<j)
+            {
+                swap(s[i],s[j]);
+                ++i;
+                --j;
+            }
         }
         return s;
     }

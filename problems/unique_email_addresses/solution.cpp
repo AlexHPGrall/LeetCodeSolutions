@@ -1,33 +1,31 @@
 class Solution {
 public:
     int numUniqueEmails(vector<string>& emails) {
-        unordered_set<string> unq;
-        int res=0;
-        for(string s:emails)
+        int  res=0;
+        unordered_set<string> mailSet;
+        for(string &address:emails)
         {
-            string w;
-            bool plus=false;
+            string s;
+            
             int i=0;
-            for(i=0;i<s.length()&&s[i]!='@';++i)
+            for(i=0;address[i]!='@';++i)
             {
-                if(plus)
+                if(address[i]=='.')
                     continue;
-                if(s[i]=='+')
-                    plus=true;
-                else if(s[i]!='.')
-                {
-                    w.push_back(s[i]);
-                }
+                if(address[i]=='+')
+                    break;
+                s.push_back(address[i]);
             }
-            w+=s.substr(i);
-            if(!unq.count(w))
+            while(address[i]!='@')
+                ++i;
+            for(;i<address.size();++i)
+                s.push_back(address[i]);
+            if(!mailSet.count(s))
             {
-                //cout<<w<<endl;
+                mailSet.insert(s);
                 res++;
-                unq.insert(w);
             }
         }
-        
         return res;
     }
 };

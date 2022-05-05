@@ -1,36 +1,45 @@
 class Solution {
 public:
     bool isValidSudoku(vector<vector<char>>& board) {
-    int colrow[9];
-    int cell[9];
         
-    memset(colrow, 0, 9*4);
-    memset(cell, 0, 9*4);
-        
-    for(int i=0;i<9;++i)
-        for(int j=0; j<9;++j)
+        for(int i=0; i<9;++i)
         {
-            if(board[i][j]=='.')
-                continue;
-            int row = 1<<(board[i][j]-'1');
-            int col =  1<<(board[i][j]-'1' +9);
-            if(colrow[i]&row)
-                return false;
-            else
-                colrow[i] |= row;
-            
-            if(colrow[j]&col)
-                return false;
-            else
-                colrow[j] |= col;
-            
-            if(cell[(j/3) + (i/3)*3]&row)
-                return false;
-            else
-                cell[(j/3) + (i/3)*3] |= row;
+            int cmask=0, rmask=0;
+            for(int j=0;j<9;++j)
+            {
+                if(board[i][j]!='.')
+                {
+                    if(rmask&(1<<(board[i][j]-'0')))
+                        return false;
+                    rmask|=(1<<(board[i][j]-'0'));
+                }
+                if(board[j][i]!='.')
+                {
+                    if(cmask&(1<<(board[j][i]-'0')))
+                        return false;
+                    cmask|=(1<<(board[j][i]-'0'));
+                }
                 
+            }
         }
-        
+        for(int i=0;i<9;i+=3)
+        {
+            
+            for(int j=0;j<9;j+=3)
+            {
+                int cellMask=0;
+                for(int k=0; k<3;++k)
+                    for(int l=0; l<3;++l)
+                    {
+                        if(board[i+k][j+l]!='.')
+                        {
+                            if(cellMask&(1<<(board[i+k][j+l]-'0')))
+                                return false;
+                            cellMask|=(1<<(board[i+k][j+l]-'0'));
+                        }
+                    }
+            }
+        }
         return true;
     }
 };

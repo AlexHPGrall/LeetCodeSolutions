@@ -17,39 +17,37 @@
  */
 
 class NestedIterator {
-    vector<NestedInteger*> Start, End;
 public:
     NestedIterator(vector<NestedInteger> &nestedList) {
-        Start.push_back(&nestedList.front());
-        End.push_back(&nestedList.back());
-        
+        begins.push(nestedList.begin());
+        ends.push(nestedList.end());
     }
-    
-    int next() {
-        return Start.back()++->getInteger();
-        
-    }
-    
-    bool hasNext() {
-        while(Start.size())
-        {
-            auto top = Start.back();
-            if(Start.back() > End.back())
-            {
-                Start.pop_back(); End.pop_back();
-                continue;
-            }
-            if(top->isInteger()) break;
-            Start.back()++;
-            if(!size(top -> getList())) continue;
-            Start.push_back(&top->getList().front());
-            End.push_back(&top->getList().back());
-        }
-        
-        return size(Start);
-    }
-};
 
+    int next() {
+        hasNext();
+        return (begins.top()++)->getInteger();
+    }
+
+    bool hasNext() {
+        while (begins.size()) {
+            if (begins.top() == ends.top()) {
+                begins.pop();
+                ends.pop();
+            } else {
+                auto x = begins.top();
+                if (x->isInteger())
+                    return true;
+                begins.top()++;
+                begins.push(x->getList().begin());
+                ends.push(x->getList().end());
+            }
+        }
+        return false;
+    }
+
+private:
+    stack<vector<NestedInteger>::iterator> begins, ends;
+};
 /**
  * Your NestedIterator object will be instantiated and called as such:
  * NestedIterator i(nestedList);

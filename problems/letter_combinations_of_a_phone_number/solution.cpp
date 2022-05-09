@@ -1,30 +1,26 @@
 class Solution {
-    char letters[26] = {'a', 'b','c','d','e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'q' ,'r','s', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'p'};
-public: 
-    void recComb(vector<string> &vec, string digits, int index, string curr)
+public:
+    vector<string> charMap={"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+    void dfs(vector<string> &res, string &dig, string &curr, int index)
     {
-        if(index == digits.length())
+        if(index==dig.size())
         {
-             vec.push_back(curr);
-             return;
+            res.push_back(curr);
+            return;
         }
-        if(digits[index] == '7')
-            recComb(vec, digits, index+1, curr + 'p');
-        if(digits[index] == '9')
-           recComb(vec, digits, index+1, curr + 'z');
-        for(int i = 0; i<3;++i)
+        for(char c:charMap[dig[index]-'0'])
         {
-            
-            recComb(vec, digits, index+1, 
-                    curr + letters[(int)(digits[index]-'2')*3+i]);
+            curr.push_back(c);
+            dfs(res,dig,curr,index+1);
+            curr.pop_back();
         }
-        return;
     }
     vector<string> letterCombinations(string digits) {
         vector<string> res;
-        if(digits.length() == 0)
+        if(digits.size()==0)
             return res;
-        recComb(res, digits, 0, "");
+        string s="";
+        dfs(res,digits,s,0);
         return res;
     }
 };

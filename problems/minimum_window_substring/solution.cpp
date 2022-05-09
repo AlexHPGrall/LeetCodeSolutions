@@ -1,87 +1,80 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-    unordered_map<char, int> mp;
-    int total=0;
-     int m = s.length(), n=t.length();
-     int left =0, right =0;
-     int minL=0, minR=m;
-     string res;
-    if(!n ||!m)
-        return res;
-    for(char c:t)
-    {
-        if(!mp.count(c))
-            mp[c]= 1;
-        else
-            ++mp[c];
-       total++;
-    }
-   
-   
-    char c=s[0];
-    
-    if(mp.count(c))
-    {
-        mp[c] -=1;
-        total -=1;
-    }    
-    if(total ==0)
-    {
-        minL=minR=0;
-        left =right+1;
-    }
-    
-    
-         
-    while(left<=right)
-    {
-        if(right == m-1 && total>0)
-            break;
-        if(left==m-1)
-            break;
-        if(total>0)
+        int i=0;
+        int j=0;
+        int l=0,r=(1e5)+1;
+        unordered_map<char, int> freq;
+        int diff=0;
+        for(char c:t)
         {
-            
-            ++right;
-            c=s[right];
-            //cout<<"right "<<c<<endl;
-            
-            if(mp.count(c))
-            {
-                mp[c] -=1;
-                if(mp[c]>=0)
-                 total -=1;
-            }
+            freq[c]++;
         }
-        else if(total ==0)
+        for(auto& [c, f]:freq)
         {
-            c=s[left];
-            //cout<<"left "<<c<<endl;
-            if(mp.count(c))
-            {
-                mp[c] +=1;
-                if(mp[c]>0)
-                    total +=1;
-            }
-            ++left;
+            diff+=-f;
         }
-        if(total==0)
+        if(freq.count(s[0]))
         {
-            
-            if(right-left< minR-minL)
-            {
-                minR=right;
-                minL=left;
-            }
+            diff++;
+            freq[s[0]]--;
         }
-        //cout<<total<<endl;
-    }
+        //cout<<diff<<endl;
+        if(diff==0 && j-i<r-l)
+        {
+
+             l=i;
+             r=j;
+        }
+        while(i<=j)
+        {
+            //cout<<i<<' '<<j<<' '<<diff<<endl;
+            if(diff<0&& j<s.size()-1)
+            {
+                ++j;
+                if(freq.count(s[j]))
+                {
+                    freq[s[j]]--;
+                    if(freq[s[j]]>=0)
+                        diff++;
+                }
+                if(diff==0 && j-i<r-l)
+                {
+                    //cout<<s[j]<<endl;
+                    l=i;
+                    r=j;
+                }
+                
+            }
+            else if(i!=j && diff>=0)
+            {
+                if(freq.count(s[i]))
+                {
+                    freq[s[i]]++;
+                    if(freq[s[i]]>0)
+                        diff--;
+                }
+                ++i;
+
+                if(diff==0 && j-i<r-l)
+                {
+                    //cout<<s[j]<<endl;
+                    l=i;
+                    r=j;
+                }
+                
+            }
+            else
+                break;
+                
+        }
+
+        if(r<((1e5)+1))
+        {
+           
+            return s.substr(l, r-l+1);
+        }
         
-    if(minR==m)
-        return res;
-     res=s.substr(minL, minR-minL +1 );   
-        
-    return res;    
+        return "";
     }
 };

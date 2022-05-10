@@ -1,49 +1,30 @@
 class Solution {
 public:
-    vector<pair<int, int>> arr;
-     int GetIndex(int i, int target)
+    vector<int> dp;
+    int Dfs(int i, vector<int>& start, vector<int>& end, vector<int>& profit)
     {
-        int low =0;
-        int high = i-1;
-        int ans = -1;
-        while(low <= high)
-        {
-            int mid = low + (high-low)/2;
-            if(arr[mid].first <= target)
-            {
-                ans = mid;
-                low = mid+1;
-            }
-            else
-                high = mid-1;
-        }
-        return ans;
+        if(i==start.size())
+            return 0;
+        if(dp[i]!=-1)
+            return dp[i];
+        
+        int ni=distance(start.begin(), lower_bound(start.begin(), start.end(),end[i]));
+        //cout<<i<<' '<<ni<<endl;
+        dp[i]=max(Dfs(i+1,start,end,profit),profit[i]+Dfs(ni,start,end,profit));
+        return dp[i];
     }
     int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
-     
-        int n=startTime.size();
-        
-        
-        for(int i=0; i<n; ++i)
+        dp.resize(startTime.size(),-1);
+        vector<pair<int, pair<int, int>>> v;
+        for(int i=0; i<startTime.size();++i)
+            v.push_back({startTime[i],{endTime[i],profit[i]}});
+        sort(v.begin(), v.end());
+        for(int i=0; i<startTime.size();++i)
         {
-            arr.push_back({endTime[i], i});
+            startTime[i]=v[i].first;
+            endTime[i]=v[i].second.first;
+            profit[i]=v[i].second.second;
         }
-        
-        sort(arr.begin(), arr.end());
-        
-        vector<int> dp(n);
-       
-        dp[0] =profit[arr[0].second];
-        for(int i=1;i<n;++i)
-        {   
-            
-            int maxProfitIndex=GetIndex(i, startTime[arr[i].second]);
-            
-            int maxProfit =maxProfitIndex==-1?0:  dp[maxProfitIndex];
-            maxProfit+=profit[arr[i].second];
-            dp[i] = max(dp[i-1], maxProfit);
-            
-        }
-        return dp[n-1];
+        return Dfs(0, startTime, endTime, profit);
     }
 };

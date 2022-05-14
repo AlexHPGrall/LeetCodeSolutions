@@ -1,42 +1,43 @@
 class Solution {
 public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-       vector<int> vis(n+1,0);
-        unordered_map<int, vector<vector<int>>> mp;
-        for(vector<int> v:times)
+        vector<vector<pair<int, int>>> graph(n+1);
+        for(auto& v:times)
         {
-            mp[v[0]].push_back({v[1],v[2]});
+            graph[v[0]].push_back({v[1],v[2]});
         }
-        vector<int> st;
-        vector<int> dist(n+1, INT_MAX);
+        vector<int> dist(n+1,INT_MAX);
+        int v=0;
+        priority_queue<pair<int,int>> q;
+        q.push({0,k});
         dist[k]=0;
-        st.push_back(k);
-        vis[k] = 1;
-        while(!st.empty())
-        {
-            int currNode=st.back();
-            st.pop_back();
-            vis[currNode]=1;
-            for(vector<int> v:mp[currNode])
-            {
-                int next=v[0];
-                int currdist=v[1];
-                if(dist[next]>dist[currNode]+currdist)
-                {
-                    dist[next]=dist[currNode]+currdist;
-                    st.push_back(next);
-                }
-            }
-        }
-        for(int i=1;i<n+1;++i)
-            if(vis[i]==0)
-                return -1;
         int res=0;
-        for(int i=1;i<n+1;++i)
+        while(!q.empty())
         {
-            res=max(res, dist[i]);
+            auto [d, node]=q.top();
+            q.pop();
+            
+            if(dist[node]<d)
+                continue;
+            for(auto [nei, neiD]:graph[node])
+            {
+                
+                if(d+neiD<dist[nei])
+                {
+                    q.push({d+neiD,nei});
+                    dist[nei]=d+neiD;
+                }
+                
+            }
+           
         }
-        
+        for(int i =1; i<=n;++i)
+        {
+            if(dist[i]==INT_MAX)
+                return -1;
+            res=max(dist[i],res);
+        }
         return res;
+        
     }
 };

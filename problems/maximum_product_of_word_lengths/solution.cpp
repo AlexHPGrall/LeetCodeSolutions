@@ -1,33 +1,23 @@
 class Solution {
 public:
     int maxProduct(vector<string>& words) {
-        int res = 0;
-        int n = words.size();
-        
-        vector<uint32_t> w2i(n);
-        for(int i =0; i<n; ++i)
+        int res=0;
+        vector<int> masks;
+        for(string &w:words)
         {
-            uint32_t index =0;
-            for(char c: words[i])
+            int mask=0;
+            for(char c:w)
+                mask|=(1<<(c-'a'));
+            masks.push_back(mask);
+        }
+        for(int i=0;i<words.size()-1;++i)
+        {
+            for(int j=i+1;j<words.size();++j)
             {
-                index = index | (1<<(c-'a'));
-            }
-            
-            
-            w2i[i]=index;
-            for(int j=i-1; j>=0; --j)
-            {
-                if(!(w2i[j]&index))
-                    res = max(res, (int)(words[i].size()*words[j].size()));
+                if(!(masks[i]&masks[j]))
+                    res=max(res, (int)words[i].size()*(int)words[j].size());
             }
         }
-        
-        
-       
-                
-        
-        
         return res;
     }
-    
 };

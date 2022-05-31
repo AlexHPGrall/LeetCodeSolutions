@@ -1,27 +1,41 @@
 class Solution {
 public:
     bool hasAllCodes(string s, int k) {
-        if(k>=s.size())
+        if(s.length()<k)
             return false;
-        unordered_set<int> binCodes;
+        vector<int> freq((1<<k),0);
+        
         int curr=0;
-        for(int i=0; i<k;++i)
+        int j=0;
+        while(j<k)
         {
-            if(s[i]=='1')
-                curr+=(1<<i);
-        }
-        
-        binCodes.insert(curr);
-        for(int i=k; i<s.size();++i)
-        {
-            curr>>=1;
-           
-            if(s[i]=='1')
-                curr+=(1<<(k-1));
+            curr<<=1;
+            if(s[j]=='1')
+                ++curr;
+            ++j;
             
-            binCodes.insert(curr);
+        }
+        //cout<<curr<<endl;
+        int cnt=1;
+        freq[curr]=1;
+        for(; j<s.length();++j)
+        {
+            curr&=~(1<<(k-1));
+            curr<<=1;
+            if(s[j]=='1')
+                ++curr;
+            //cout<<curr<<endl;
+
+            if(freq[curr]==0)
+            {
+                cnt++;
+                freq[curr]=1;
+            }
         }
         
-        return binCodes.size()==(1<<k);
+        if(cnt==(1<<k))
+            return true;
+        return false;
+           
     }
 };

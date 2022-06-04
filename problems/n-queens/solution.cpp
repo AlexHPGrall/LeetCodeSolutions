@@ -1,45 +1,23 @@
 class Solution {
 public:
-    void solve(int row ,int n, vector<string> &board, vector<vector<string>> &res)
+     vector<vector<string>> res;
+    void dfs(vector<string> &curr, int n, int row, int c, int d1, int d2)
     {
-        if(row ==n)
+        if(row==n)
+            res.push_back(curr);
+        for(int col=0; col<n;++col)
         {
-            res.push_back(board);
-            return;
+            if(((1<<col)&c) || (1<<(row-col+n)&d1) || (1<<(row+col)&d2))
+                continue;
+            curr[row][col]='Q';
+            dfs(curr, n, row+1, c|(1<<col), d1|(1<<(row-col+n)), d2|(1<<(row+col)));
+            curr[row][col]='.';
         }
-        for(int i = 0; i<n; ++i)
-        {
-            if(check(row, i, n, board))
-            {
-                board[row][i]='Q';
-                solve(row+1, n, board, res);
-                board[row][i]='.';
-            }
-            
-            
-        }
-    }
-    bool check(int row, int col, int n, vector<string> &board)
-    {
-        for(int i= row-1; i>=0; --i)
-        {
-            if(board[i][col] == 'Q')
-                return false;
-            if(col+(row-i)<n && board[i][col+(row-i)] == 'Q')
-                return false;
-            if(col-(row-i)>=0 && board[i][col-(row-i)] == 'Q')
-                return false;
-        }
-        return true;
     }
     vector<vector<string>> solveNQueens(int n) {
-        vector<vector<string>> res;
         string s(n, '.');
-        vector<string> board(n, s);
-        solve(0,n,board,res);
-        
-       
-        
+        vector<string> curr(n, s);
+        dfs(curr, n, 0, 0, 0, 0);
         return res;
         
     }

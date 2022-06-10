@@ -4,6 +4,7 @@ public:
         if(s.size()==0)
             return 0;
         unordered_map<char, int> letters;
+        
         int curr=0;
         int res=1;
         for(int i=0; i<s.size();++i)

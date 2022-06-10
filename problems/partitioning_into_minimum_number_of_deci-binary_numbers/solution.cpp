@@ -4,7 +4,9 @@ public:
         int res=0;
         for(char c:n)
         {
-            res = max(res, static_cast<int>(c-'0'));
+            res=max(res,c-'0');
+            if(res==9)
+                break;
         }
         return res;
     }

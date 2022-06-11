@@ -1,28 +1,37 @@
 class MedianFinder {
-    vector<int> nums;
+    priority_queue<int, vector<int>, less<int>> low;
+    priority_queue<int, vector<int>, greater<int>> high;
     int n;
 public:
-    /** initialize your data structure here. */
     MedianFinder() {
         n=0;
     }
     
     void addNum(int num) {
-        int i=0;
-        while(i<n && num>nums[i])
-            ++i;
-        nums.insert(nums.begin() + i, num);
-        n++;
+        ++n;
+        if(low.empty()|| num<=low.top())
+            low.push(num);
+        else
+            high.push(num);
+        while(low.size()>((n+1)/2))
+        {
+            high.push(low.top());
+            low.pop();
+        }
+        while(high.size()>n/2)
+        {
+            low.push(high.top());
+            high.pop();
+        }
+
     }
     
     double findMedian() {
-    
-        if(n&1)
-            return (double)nums[n/2];
+        if(low.size()==high.size())
+            return ((double)low.top()+(double)high.top())/2.0f;
         else
-        {
-            return (double)(nums[n/2] +nums[(n/2)-1])/2.0f;
-        }
+            return low.top();
+        
     }
 };
 

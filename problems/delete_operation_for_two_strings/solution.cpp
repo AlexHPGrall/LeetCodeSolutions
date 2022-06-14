@@ -1,22 +1,21 @@
 class Solution {
 public:
-    //get size of longest common substr
     int minDistance(string word1, string word2) {
-        
-        int m = word1.size();
-        int n = word2.size();
-        if(m<n)
-        {swap(word1,word2);swap(m,n);}
-        vector<int> last(n+1,0), curr(n+1,0);
-       for(char c: word1)
-        { 
-            for(int j=0; j<n;++j)
+        vector<int> dp1(word1.size()+1,0), dp2(word1.size()+1,0);
+        for(int i=0;i<=word2.size();++i)
+        {
+            for(int j=0;j<=word1.size();++j)
             {
-               curr[j+1] = (word2[j] == c)?last[j]+1:max(curr[j],last[j+1]);              
+                if(i==0 || j==0)
+                    continue;
+                if(word1[j-1]==word2[i-1])
+                    dp2[j]=1+dp1[j-1];
+                else
+                    dp2[j]=max(dp2[j-1], dp1[j]);
             }
-            swap(curr, last);
+            swap(dp1, dp2);
         }
-        
-        return (n-last[n]) +(m-last[n]);
+        cout<<dp1[word1.length()]<<endl;
+        return word1.size()+word2.size() -2*(dp1[word1.length()]);
     }
 };

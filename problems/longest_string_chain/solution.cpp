@@ -1,37 +1,30 @@
 class Solution {
 public:
     int longestStrChain(vector<string>& words) {
-        unordered_map<string, int> DPTable;
-        int maxl=1;
-        sort(words.begin(), words.end(), 
-        [](const string& s1, const string& s2){return s1.length()>s2.length();});
-        for(string s: words)
-            DPTable.emplace(s,1);
-        for(string s:words)
+        int n=words.size();
+        sort(begin(words),end(words),[](const string &a, const string &b)
+             {
+                 return a.size()<b.size();
+             });
+        vector<int> dp(n,0);
+        unordered_map<string, int> vis;
+        int res=1;
+        for(int i=0;i<n;++i)
         {
-            int n = s.length();
-            for(int i=0; i<n; ++i)
+            vis[words[i]]=i;
+            string key;
+
+            for(int j=0;j<words[i].size();++j)
             {
-                string s2;
-                for(int j=0; j<n; ++j)
-                {
-                    if(j==i)
-                        continue;
-                    s2.push_back(s[j]);
-                }
-                if(DPTable.find(s2) == DPTable.end())
-                    continue;
-                else
-                {
-                    DPTable[s2] = max(DPTable[s2], DPTable[s] +1);
-                    maxl= max(maxl, DPTable[s2]);
-                }
+                key=words[i].substr(0,j);
+                key+=words[i].substr(j+1);
+                if(vis.count(key))
+                    dp[i]=max(dp[i], dp[vis[key]]);
                 
             }
-            
+            dp[i]+=1;
+            res=max(res, dp[i]);
         }
-        
-        return maxl;
+        return res;
     }
-   
 };

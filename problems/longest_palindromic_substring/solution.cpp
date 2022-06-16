@@ -1,29 +1,43 @@
 class Solution {
 public:
     string longestPalindrome(string s) {
-        int n=s.length();
-        vector<vector<int>> pal(n,vector<int>(n,1));
-        int res=1;
-        int a=0,b=0;
-        for(int l=2;l<=n;++l)
-        {
-            for(int i=0;i<=n-l;++i)
-            {
-                if(l==2)
-                {
-                    pal[i][i+1]= s[i]==s[i+1]?2:0;
-                    
-                }
-                else
-                    pal[i][i+l-1]=s[i]==s[i+l-1]&&pal[i+1][i+l-2]?pal[i+1][i+l-2]+2:0;
-                if(pal[i][i+l-1]>res)
-                {
-                    a=i;b=i+l-1;
-                    res=max(pal[i][i+l-1],res);
-                }
-                
-            }
+        string t;
+        for(char c:s)
+        {t+="#";
+         t+=c;
         }
-        return s.substr(a,b-a+1);
+        t+="#";
+        int n=t.size();
+        t="$"+t+"^";
+        int l=1;
+        int r=1;
+        int resIndex=1;
+        int resLength=1;
+        vector<int> d(n+2);
+        for(int i=1; i<=n;++i)
+        {
+            d[i]=max(0, min(r-i, d[l+r-i]));
+            while(t[i+d[i]]==t[i-d[i]])
+                ++d[i];
+            if(i+d[i]>r)
+            {
+                l=i-d[i];
+                r=i+d[i];
+            }
+            if(resLength<d[i])
+            {
+                resLength=d[i];
+                resIndex=i;
+            }
+           
+        }
+  
+        string res;
+        for(int i=resIndex-d[resIndex]+1;i<resIndex+d[resIndex];++i)
+        {
+            if(t[i]!='#')
+                res.push_back(t[i]);
+        }
+        return res;
     }
 };

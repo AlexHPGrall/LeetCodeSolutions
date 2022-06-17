@@ -10,20 +10,30 @@
  * };
  */
 class Solution {
-    int ans =0;
 public:
-    int dfs(TreeNode* node)
-    {   if(!node)
+    int helper(TreeNode* root, TreeNode* p)
+    {
+        if(!root)
             return 0;
-        int val =dfs(node->left) + dfs(node->right);
-        if(val == 0) return 3;
-        if(val <3) return 0;
-        ans++;
-        return 1;
-        
+        root->val=0;
+        int l=helper(root->left, root);
+        int r=helper(root->right, root);
+        if((!root->left||root->left->val) && (!root->right || root->right->val))
+        {
+            return l+r;
+        }
+        root->val=1;
+        if(p)
+            p->val=1;
+        return l+r+1;
     }
     int minCameraCover(TreeNode* root) {
-        int res = dfs(root);
-        return res>2 ? ans+1: ans;
+        
+        if(!root)
+            return 0;
+        int res=helper(root, nullptr);
+        if(!root->val)
+            res++;
+        return res;
     }
 };

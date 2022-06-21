@@ -1,47 +1,23 @@
 class Solution {
 public:
-    int furthestBuilding(vector<int>& heights, int bricks, int ladders) {
-        vector<int> l(ladders);
-        int rem, res;
-        rem=0;
-        int n= heights.size();
-        int i=0;
-        while(rem<=bricks && i<n-1)
+    int furthestBuilding(vector<int>& h, int b, int r) {
+        priority_queue<int, vector<int>, greater<int>> pq;
+        int curr=0;
+        for(int i=1; i<h.size();++i)
         {
-            if(heights[i] >=heights[i+1])
+            if(h[i]>h[i-1])
+                pq.push(h[i]-h[i-1]);
+            if(pq.size()>r)
             {
-                 ++i;  
-                 continue;
+               curr+=pq.top(); 
+                pq.pop();
+                if(curr>b)
+                    return i-1;
             }
-                
-            if(l.size()<ladders && ladders)
-            {
-                l.push_back(heights[i] - heights[i+1]);
-                if(l.size()==ladders)
-                    make_heap(l.begin(), l.end());
-            }
-            
-            else 
-            {
-                if(ladders && heights[i] - heights[i+1] < l.front() )
-                {
-                    rem -= l.front();
-                    pop_heap(l.begin(), l.end());
-                    l.pop_back();
-                    l.push_back(heights[i] - heights[i+1]);
-                    push_heap(l.begin(), l.end());
-                }
-                else
-                {
-                    rem +=heights[i+1] - heights[i];
-                }
-
-            }
-          if(rem<=bricks)  
-            ++i;      
-          
-            
+            //cout<<curr<<endl;
         }
-        return i;
+        
+        return h.size()-1;
+        
     }
 };

@@ -1,23 +1,32 @@
 class Solution {
 public:
     int scheduleCourse(vector<vector<int>>& courses) {
-        sort(courses.begin(), courses.end(), [](auto &a, auto &b){return a[1]<b[1];});
+        sort(begin(courses), end(courses), [](const vector<int> &a, const vector<int> &b)
+             {
+                 if(a[1]==b[1])
+                     return a[0]<b[0];
+                 return a[1]<b[1];
+             });
         priority_queue<int> pq;
-        int total =0;
-        for(auto u:courses)
+        int end=0;
+        for(auto &v:courses)
         {
-            int dur = u[0], end = u[1];
-            if(total + dur<= end)
+            if(v[0]+end<=v[1])
             {
-                pq.push(dur);
-                total+=dur;
+                end+=v[0];
+                pq.push(v[0]);
             }
-            else if(pq.size() && dur < pq.top())
+            else
             {
-                total += dur-pq.top();
-                pq.pop();
-                pq.push(dur);
+                if(!pq.empty() && pq.top()> v[0])
+                {
+                    end+=v[0]-pq.top();
+                    pq.pop();
+                    pq.push(v[0]);
+                }
+                
             }
+        
         }
         return pq.size();
         

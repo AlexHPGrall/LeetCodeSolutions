@@ -1,44 +1,32 @@
 class Solution {
 public:
     bool isPossible(vector<int>& target) {
+        if(target.size()==1)
+            return target[0]==1;
+        priority_queue<int> pq;
+        long long sum=0;
         
-        int m = target.size();
-        if(m <=1)
-            return (m ==1 && target[0] ==1);
-       
-        int res = 0;
-        long sum =0;
-        priority_queue<int> pq(target.begin(), target.end());
         for(int n:target)
-            {
-                sum+=n;
-                
-            }
-        for(;;)
         {
-            
-           
-            res =  pq.top();
-            
-            if(res ==1)
-                return true;
-            
-            
-                
-            sum -=res;
-            if(sum ==1)
-                return true;
-            if(res-sum <1)
+            pq.push(n);
+            sum+=n;
+        }
+        sum-=pq.top();
+        while(pq.top()!=1)
+        {
+            int x=pq.top();
+            if(x-sum<1)
                 return false;
-            if(res%sum ==0)
-                return false;
+            x%=sum;
+            if(x==0)
+                x+=sum;
             pq.pop();
-            pq.push(res%sum);
-            sum += res%sum;
             
+            pq.push(x);
+            sum+=x;
+            sum-=pq.top();
         }
         
-        return false;
-        
+        return true;
     }
 };

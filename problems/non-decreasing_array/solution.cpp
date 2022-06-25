@@ -1,32 +1,25 @@
 class Solution {
 public:
     bool checkPossibility(vector<int>& nums) {
-        int res =0;
-        int n = nums.size();
-        int i=0;
-        while(++i <n)
+        int n=nums.size();
+        bool found=false;
+        for(int i=0;i<n-1;++i)
         {
-            if(nums[i] < nums[i-1])
+            if(nums[i]>nums[i+1])
             {
-                int lres =0;
-                res++;
-                if(res >1)
+                if(found)
                     return false;
-                if(i>1)
+                if(i>0 && i<n-2)
                 {
-                    if(nums[i]<nums[i-2])
-                        lres++;
+                    if(nums[i-1]>nums[i+2])
+                        return false;
+                    if((nums[i]<=nums[i+2]) || (nums[i-1]<=nums[i+1] && nums[i+1]<=nums[i+2]))
+                        ++i;
+                    else
+                        return false;
                 }
-                if(i != n-1)
-                {
-                    if(nums[i+1] < nums[i-1])
-                    lres++;
-                }
-                
-                if(lres >=2)
-                    return false;
-                
-            }           
+                found=true;
+            }
         }
         return true;
     }

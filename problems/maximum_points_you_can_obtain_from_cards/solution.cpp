@@ -1,19 +1,23 @@
 class Solution {
 public:
-    int maxScore(vector<int>& vec, int k) {
-        int n= vec.size();
-        int ans=0;
-        for(int i =1; i<n; ++i)
+    int maxScore(vector<int>& nums, int k) {
+        int sum=0;
+        int currSum=0;
+        int res=0;
+        int n=nums.size();
+        for(int i=0;i<n-k;++i)
         {
-            vec[i] += vec[i-1];
-            if(i>= n-k-1)
-            {
-                if(ans == 0)
-                    ans = vec[i];
-                else
-                    ans = min(ans, vec[i]-vec[i-(n-k)]);
-            }
+            sum+=nums[i];
         }
-        return (vec[n-1] -ans);
+        currSum=sum;
+        res=sum;
+        for(int i=n-k;i<n;++i)
+        {
+            sum+=nums[i];
+            currSum+=nums[i];
+            currSum-=nums[i-(n-k)];
+            res=min(res,currSum);
+        }
+        return sum-res;
     }
 };

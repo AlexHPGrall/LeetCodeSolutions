@@ -1,25 +1,39 @@
 class Solution {
 public:
     int numSubmatrixSumTarget(vector<vector<int>>& matrix, int target) {
-        unordered_map<int, int> mp;
-        int res =0, m=matrix.size(), n=matrix[0].size();
-        for(int row=0; row < m; ++row)
-            for(int col =1; col < n; ++col)
-                matrix[row][col] += matrix[row][col-1];
+        int m=matrix.size();
+        int n=matrix[0].size();
+        vector<vector<int>> sum(m+1, vector<int>(n+1,0));
         
-        for(int colStart=0;colStart<n;++colStart)
-            for(int colEnd = colStart; colEnd < n; ++colEnd)
+        for(int i=0;i<m;++i)
+        {
+            for(int j=0;j<n;++j)
             {
-                int sum = 0;
-                mp={{0,1}};
-                for(int row=0; row<m; ++row)
-                {
-                    sum += matrix[row][colEnd] -(colStart?matrix[row][colStart-1]:0);
-                    res +=mp[sum -target];
-                    ++mp[sum];
-                }
-                    
+                sum[i+1][j+1]=matrix[i][j]+sum[i][j+1]+sum[i+1][j]-sum[i][j];
             }
+        }
+        int res=0;
+        for(int r1=0;r1<m;++r1)
+        {
+            for(int r2=r1;r2<m;++r2)
+            {
+                unordered_map<int, int> mp;
+                mp[0]=1;
+                //cout<<r1<<' '<<r2<<':';
+                for(int j=0;j<n;++j)
+                {
+                    
+                    int curr=sum[r2+1][j+1]-sum[r1][j+1];
+                    //cout<<curr<<", ";
+                    if(mp.count(curr-target))
+                        res+=mp[curr-target];
+                    mp[curr]++;
+                }
+                //cout<<endl;
+            }
+        }
+        
         return res;
     }
+    
 };

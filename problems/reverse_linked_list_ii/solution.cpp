@@ -11,53 +11,37 @@
 class Solution {
 public:
     ListNode* reverseBetween(ListNode* head, int left, int right) {
-        ListNode *LeftNode = nullptr;
-        ListNode *Prev, *Next, *Curr;
-        Curr = head;
-        Prev = nullptr;
-        Next = head->next;
-        for(int i=1; i<=right+1; ++i)
+        ListNode* curr, *next, *prev;
+        curr=head;
+        next=curr;
+        
+        for(int i=1;i<left;++i)
         {
-            if(Curr)
-            cout<<Curr->val<<endl;
-           
-            if(i == left -1)
-            {
-                LeftNode =Curr;
-            }
-            
-            if(i==right+1 )
-            {
-                if(LeftNode)
-                {
-                    LeftNode->next->next = Curr;
-                    LeftNode->next = Prev;
-                }
-                else
-                {
-                    head->next = Curr;
-                    head = Prev;
-                }
-                
-            }
-            else if(i>=left && i<=right)
-            {
-                Curr->next = Prev;
-            }
-            
-            Prev = Curr;
-            Curr = Next;
-            if(Curr)
-                Next = Curr->next;
+            prev=next;
+            next=next->next;
+        }
+        ListNode *start=prev;
+
+        for(int i=left;i<=right;++i)
+        {
+            curr=next;
+            next=curr->next;
+            curr->next=prev;
+            prev=curr;
             
         }
         
-        
+        if(left==1)
+        {
+            head->next=next;
+            return prev;
+        }
+        else
+        {
+            start->next->next=next;
+            start->next=prev;
+        }
         
         return head;
-        
     }
-        
-    
-                    
 };

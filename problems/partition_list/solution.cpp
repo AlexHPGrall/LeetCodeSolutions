@@ -11,60 +11,52 @@
 class Solution {
 public:
     ListNode* partition(ListNode* head, int x) {
-        ListNode *curr, *lower, *lowerHead, *upper, *upperHead, *next;
-        curr = head;
-        upperHead = lowerHead = nullptr;
-        if(!curr || !curr->next)
+        if(!head)
             return head;
-        while(curr)
+        ListNode *head2, *tail1, *tail2;
+        ListNode *curr=head;
+        if(head->val<x)
         {
-            next = curr->next;
-            
-            if(curr->val < x )
+            while(curr && curr->val<x)
             {
-                cout <<curr->val<< ' ';
-                if(lowerHead == nullptr)
-                {
-                    lower= lowerHead =curr;
-                }
-                else{
-                    lower->next = curr;
-                    lower = lower->next;
-                }
-                
+                tail1=curr;
+                curr= curr->next;
             }
-            if(curr->val >= x )
-            {
-                if(upperHead == nullptr)
-                {
-                    upper= upperHead =curr;
-                }
-                upper->next = curr;
-                upper = upper->next;
-            }
-                
-                
-            curr = next;    
-        }
-        if(lowerHead == nullptr )
-        {
-            lowerHead= upperHead;
-            upper->next = nullptr;
-        }
-        else if(upperHead == nullptr)
-        {
-            lower->next = nullptr;
+            if(!curr)
+                return head;
+            head2=curr;
+            tail2=curr;
         }
         else
-        {
-            upper->next = nullptr;
-            lower->next = upperHead;
+        {   head2=head;
+            while(curr && curr->val>=x)
+            {
+                tail2=curr;
+                curr= curr->next;
+            }
+            if(!curr)
+                return head;
+            head=curr;
+            tail1=curr;
         }
-        
-        
-       
-        
-     return lowerHead;   
+        //cout<<"ok"<<endl;
+        while(curr->next)
+        {
+            curr=curr->next;
+            if(curr->val<x)
+            {
+                tail1->next=curr;
+                tail1=curr;
+            }
+            else
+            {
+                tail2->next=curr;
+                tail2=curr;
+            }
+            
+        }
+        tail1->next=head2;
+        tail2->next=nullptr;
+        return head;
     }
-    
 };

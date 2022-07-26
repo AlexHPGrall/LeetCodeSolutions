@@ -9,66 +9,40 @@
  */
 class Solution {
 public:
-    TreeNode* Found1, *Found2, *Parent;
-    void RecTraversal(TreeNode* curr, TreeNode* p, TreeNode* q)
+    TreeNode *res=nullptr;
+    void find(TreeNode* root, TreeNode* p, TreeNode* q, bool &bp, bool &bq )
     {
-        
-        if(Parent || !curr)
+        if(!root || res!=nullptr)
             return;
-        if(!Found1 && (curr == p || curr ==q))
+        bool tp, tq;
+        find(root->left,p,q,bp,bq);
+        tp=bp;
+        tq=bq;
+        bp=false;
+        bq=false;
+        find(root->right,p,q,bp,bq);
+        if(root==p)
         {
-            Found1 =curr;
+            bp=true;
+        }
+        if(root==q)
+            bq= true;
+        bp=tp||bp;
+        bq=tq||bq;
+        if(bq&&bp)
+        {
+            bp=false;
+            bq=false;
+            res=root;
+        }
         
-        
-            RecTraversal(curr->left, p, q);
-            RecTraversal(curr->right, p, q);
-        
-            if(Found2)
-                Parent =Found1;
-            return;
-        }
-        else if(Found1 && (curr == p || curr ==q))
-        {
-            Found2 =curr;
-            return;
-        }
-        else if(!Parent && !Found1)
-        {
-            RecTraversal(curr->left, p, q);
-            if(Found1 && !Parent)
-            {
-                RecTraversal(curr->right, p, q);
-                if(Found2 && !Parent)
-                {
-                    Parent =curr;
-                    return;
-                }
-                return;
-                    
-                
-            }
-            else if(Parent)
-                return;
-            else
-            {
-                RecTraversal(curr->right, p, q);
-            }
-            
-            
-        }
-        else
-        {
-            RecTraversal(curr->left, p, q);
-            RecTraversal(curr->right, p, q);
-        }
         
         
     }
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        Found1= Found2= nullptr;
-        Parent=nullptr;
-        RecTraversal(root, p, q);
-        return Parent;
         
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        bool a=false, b=false;
+        find(root, p,q,a,b);
+        return res;
     }
 };

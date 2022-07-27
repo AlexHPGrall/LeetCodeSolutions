@@ -11,28 +11,49 @@
  */
 class Solution {
 public:
-    void flatten(TreeNode* root) {
-        TreeNode *curr, *run;
-        curr  = root;
-        
+    void flatten(TreeNode *root)
+    {
+        rflatten(root);
+        /*cout<<"ok"<<endl;
+        TreeNode* curr=root;
         while(curr)
-        { 
-            if(curr->left)
+        {
+            cout<<curr->val<<endl;
+            curr=curr->right;
+        }
+        //cout<<"ok"<<endl;
+        */
+    }
+    void rflatten(TreeNode* root, TreeNode *R=NULL) {
+        //cout<<root->val<<endl;
+        if(!root)
+            return;
+        if(root->left)
+        {
+            if(root->right)
             {
-                run = curr->left;
-                while(run->right)
-                {
-                    run=run->right;
-                }
-                run->right=curr->right;
-                curr->right = curr->left;
-                curr->left =NULL;
-            
-            
-                }
-                curr= curr->right;
+                rflatten(root->left,root->right);
             }
-       
-       
+            else
+                rflatten(root->left,R);
+        }
+        if(root->right)
+        {
+           rflatten(root->right,R);
+            if(root->left)
+                root->right=root->left;
+        }
+        else
+        {
+            if(root->left)
+                root->right=root->left;
+            else
+                root->right=R;
+               
+        }
+        root->left=nullptr;
+        
+        
+        
     }
 };

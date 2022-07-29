@@ -1,44 +1,32 @@
 class Solution {
 public:
-    vector<string> findAndReplacePattern(vector<string>& words, string pattern) {
-        int n = pattern.size();
-        vector<string>res;
-        for(string const& s: words)
+    string convert(string &s)
+    {
+        char map[26]={};
+        int idx=0;
+        string w(s.size(), ' ');
+        for(int i=0;i<s.size();++i)
         {
-            unordered_map<char, char> p2w;
-            int i=0;
-            while(i<n)
+            char c=s[i];
+            if(!map[c-'a'])
             {
-                if(p2w.find(pattern[i]) == p2w.end() )
-                {
-                    int check= 0;
-                for(auto it:p2w)
-                {
-                    if(it.second == s[i])
-                             ++check;
-                        
-                        if(check)
-                            break;
-                    }
-                    if(check)
-                            break;
-                       
-                
-                    p2w[pattern[i]] = s[i];
-                    
-                    
-                }
-                else if(p2w[pattern[i]] != s[i] )
-                {break;}
-                
-                
-                
-                ++i;
+                map[c-'a']='a'+idx;
+                ++idx;
             }
-            cout<<endl;
-            if(i==n)
-                res.push_back(s);
+            w[i]=map[c-'a'];
         }
+        return w;
+    }
+    vector<string> findAndReplacePattern(vector<string>& words, string pattern) {
+        vector<string> res;
+        string pat=convert(pattern);
+        for(string &w:words)
+        {
+            string v=convert(w);
+            if(v==pat)
+                res.push_back(w);
+        }
+        
         return res;
     }
 };

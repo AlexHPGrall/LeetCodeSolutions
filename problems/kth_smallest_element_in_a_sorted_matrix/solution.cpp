@@ -9,7 +9,7 @@ public:
         
         while(left<right)
         {
-            int mid = (left+right)/2;
+            int mid = (left+right)>>1;
             int j=m-1;
             int count=0;
             for(int i =0; i<m; ++i)
